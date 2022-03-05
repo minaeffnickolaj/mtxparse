@@ -8,6 +8,7 @@ package main
 */
 
 import (
+	"os"
 	_ "text/template"
 )
 
@@ -22,5 +23,13 @@ type MobaXTerm struct {
 
 func main() {
 	print("Let's go parse files...")
+	//
+	//creating output file
+	MXTFile, err := os.Create("output.mxtsessions")
+	if err != nil {
+		println("Unable to create output file:", err)
+		os.Exit(1)
+	}
+	defer MXTFile.Close()
 
 }
