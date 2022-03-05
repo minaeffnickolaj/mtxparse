@@ -8,7 +8,7 @@ package main
 */
 
 import (
-	_ "text/template"
+	_ "text/template" //шаблонизатор
 )
 
 // MobaXTerm connection struct
@@ -21,5 +21,6 @@ type MobaXTerm struct {
 }
 
 func main() {
-	print("Hello World!")
+	print("Let's go parse files...")
+
 }
