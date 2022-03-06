@@ -12,6 +12,7 @@ import (
 	"bytes"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"text/template"
 
 	"github.com/xuri/excelize/v2"
@@ -20,6 +21,7 @@ import (
 
 // MobaXTerm connection struct
 type MobaXTerm struct {
+	RecordNum     string
 	APCode        string
 	RKName        string // Региональная компания
 	AptName       string // Имя аптеки в нотации типа 'мскАпт1001'
@@ -48,12 +50,13 @@ func main() {
 		println(err)
 		return
 	}
-	for _, row := range Rows {
+	for i, row := range Rows {
 		/*
 			Excel row in Excelize realized like [][]string, when each
 			cell is [i][y] - i is Row, y is Cell
 		*/
 		MXTConnection := new(MobaXTerm) //create MXT
+		MXTConnection.RecordNum = strconv.Itoa(i + 1)
 		MXTConnection.APCode = row[1]
 		MXTConnection.RKName = row[2]
 		MXTConnection.AptName = row[0]
@@ -64,7 +67,7 @@ func main() {
 	//Begin generate MXT file
 	//Creating template of MobaXTerm connection
 	MXTTemplate := template.New("MobaXTermTemplate")
-	MXTTemplateText := "\n\n[Bookmarks_2]\nSubRep={{.RKName}}\\{{.AptName}}\nImgNum=41\n{{.AptName}}({{.APCode}})=#91#4%{{.ServerAddress}}.apt.rigla.ru%10433%[{{.Username}}]%0%-1%-1%-1%-1%0%0%-1%%%%%0%0%%-1%%-1%-1%0%-1%0%-1#MobaFont%10%0%0%-1%15%236,236,236%30,30,30%180,180,192%0%-1%0%%xterm%-1%-1%_Std_Colors_0_%80%24%0%1%-1%<none>%%0%0%-1#0# #-1"
+	MXTTemplateText := "\n\n[Bookmarks_{{.RecordNum}}]\nSubRep={{.RKName}}\\{{.AptName}}\nImgNum=41\n{{.AptName}}({{.APCode}})=#91#4%{{.ServerAddress}}.apt.rigla.ru%10433%[{{.Username}}]%0%-1%-1%-1%-1%0%0%-1%%%%%0%0%%-1%%-1%-1%0%-1%0%-1#MobaFont%10%0%0%-1%15%236,236,236%30,30,30%180,180,192%0%-1%0%%xterm%-1%-1%_Std_Colors_0_%80%24%0%1%-1%<none>%%0%0%-1#0# #-1"
 	MXTTemplate.Parse(MXTTemplateText)
 	//create file to save output
 	ParsedFile, err := os.Create("unprepared.mxtconnections")
