@@ -77,7 +77,7 @@ func main() {
 		MXTTemplate.Execute(ParsedFile, MobaXTerm)
 	}
 	// finally
-	ConvertFileToWin1251(FileToString())
+	ConvertFileToOem855(FileToString())
 	println("Job done!")
 }
 
@@ -100,8 +100,8 @@ func FileToString() string {
 	return Result
 }
 
-func ConvertFileToWin1251(InputString string) {
-	Encoder := charmap.Windows1251.NewEncoder()
+func ConvertFileToOem855(InputString string) {
+	Encoder := charmap.CodePage855.NewEncoder()
 	s, err := Encoder.String(InputString)
 	if err != nil {
 		panic(err)
